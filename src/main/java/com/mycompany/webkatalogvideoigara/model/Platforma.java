@@ -10,10 +10,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import java.util.Set;
 /**
  *
  * @author uros
  */
+@Entity
 public class Platforma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,9 @@ public class Platforma {
     
     @Column
     private String proizvodjac;
+    
+    @ManyToMany(mappedBy="platforme_igre")
+    private Set<VideoIgra> igre_na_platformi;
 
     public Integer getId() {
         return id;

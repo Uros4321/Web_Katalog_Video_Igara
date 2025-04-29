@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import java.time.Year;
 import java.util.Set;
@@ -26,7 +28,18 @@ public class VideoIgra {
     private Integer id;
     
     @ManyToMany
-    private Set<KategorijaVideoIgre> igre_u_kategoriji;
+    @JoinTable(name="kategorije_igara",
+            joinColumns=@JoinColumn(name="igra_id", referencedColumnName="id"),
+        inverseJoinColumns=
+            @JoinColumn(name="kategorija_id", referencedColumnName="id"))
+    private Set<KategorijaVideoIgre> kategorije_igre;
+    
+    @ManyToMany
+    @JoinTable(name="platforme_za_igru",
+            joinColumns=@JoinColumn(name="igra_id", referencedColumnName="id"),
+        inverseJoinColumns=
+            @JoinColumn(name="platforma_id", referencedColumnName="id"))
+    private Set<Platforma> platforme_igre;
     
     @Column
     private String naziv;
@@ -48,12 +61,12 @@ public class VideoIgra {
         this.id = id;
     }
 
-    public Set<KategorijaVideoIgre> getIgre_u_kategoriji() {
-        return igre_u_kategoriji;
+    public Set<KategorijaVideoIgre> getKategorije_igre() {
+        return kategorije_igre;
     }
 
-    public void setIgre_u_kategoriji(Set<KategorijaVideoIgre> igre_u_kategoriji) {
-        this.igre_u_kategoriji = igre_u_kategoriji;
+    public void setKategorije_igre(Set<KategorijaVideoIgre> igre_u_kategoriji) {
+        this.kategorije_igre = igre_u_kategoriji;
     }
 
     public String getNaziv() {

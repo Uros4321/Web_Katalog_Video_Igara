@@ -4,13 +4,17 @@
 
 package com.mycompany.webkatalogvideoigara;
 
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  *
  * @author uros
  */
+@SpringBootApplication
 public class WebKatalogVideoIgara {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        SpringApplication.run(WebKatalogVideoIgara.class, args);
     }
 }

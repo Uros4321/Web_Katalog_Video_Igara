@@ -1,7 +1,7 @@
 package com.mycompany.webkatalogvideoigara.model.dto;
 
 
-import jakarta.persistence.Entity;
+
 import java.time.Year;
 import java.util.Set;
 /*
@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @author uros
  */
-@Entity
+
 public class VideoIgraDTO {
     
 

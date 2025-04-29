@@ -1,7 +1,7 @@
 package com.mycompany.webkatalogvideoigara.model.dto;
 
 
-import jakarta.persistence.Entity;
+
 import java.util.Set;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author uros
  */
-@Entity
+
 public class KategorijaVideoIgreDTO {
     
 

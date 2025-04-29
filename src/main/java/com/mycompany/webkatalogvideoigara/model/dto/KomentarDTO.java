@@ -12,7 +12,7 @@ import jakarta.persistence.Entity;
  *
  * @author uros
  */
-@Entity
+
 public class KomentarDTO {
     
 

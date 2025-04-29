@@ -27,7 +27,7 @@ public class KategorijaVideoIgre {
     @Column
     private String naziv;
     
-    @ManyToMany
+    @ManyToMany(mappedBy="kategorije_igre")
     private Set<VideoIgra> igre_u_kategoriji;
 
     public Integer getId() {
