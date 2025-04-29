@@ -5,7 +5,7 @@ function KatalogIgara(){
     var displayList = []
     var paginationList = []
 
-    var blockSize = compactBlockSize
+    var blockSize = standardBlockSize
 
 
     const genList = (list,blockSize,blockNum) => {
@@ -83,27 +83,28 @@ function KatalogIgara(){
                 
             }
 
-            if(blockNum === pagenum){
-                paginationList.push(
-                    <div className={classStr}> {">"} </div>
-                    
-                )
-                paginationList.push(
-                    <div className={classStr}> {">>"} </div>
-                    
-                )
-                
-            }else{
-                paginationList.push(
-                    <button className={classStr}> {">"} </button>
-                    
-                )
-                paginationList.push(
-                    <button className={classStr}> {">>"} </button>
-                    
-                )
-            }
+            
 
+        }
+        if(blockNum === pagenum){
+            paginationList.push(
+                <div className={classStr}> {">"} </div>
+                
+            )
+            paginationList.push(
+                <div className={classStr}> {">>"} </div>
+                
+            )
+            
+        }else{
+            paginationList.push(
+                <button className={classStr}> {">"} </button>
+                
+            )
+            paginationList.push(
+                <button className={classStr}> {">>"} </button>
+                
+            )
         }
     }
     genList(listaIgara,blockSize,1)
