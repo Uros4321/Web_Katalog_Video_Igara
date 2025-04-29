@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import KatalogMainPage from './KatalogVideoIgara/KatalogMainPage';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <KatalogMainPage />
+    <BrowserRouter>
+      <KatalogMainPage />
+    </BrowserRouter>
   </React.StrictMode>
 );
 
