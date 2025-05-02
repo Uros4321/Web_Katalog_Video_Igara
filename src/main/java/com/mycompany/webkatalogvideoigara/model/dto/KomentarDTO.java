@@ -1,8 +1,5 @@
 package com.mycompany.webkatalogvideoigara.model.dto;
 
-
-import jakarta.persistence.Entity;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -15,7 +12,6 @@ import jakarta.persistence.Entity;
 
 public class KomentarDTO {
     
-
     private Integer id;
 
     private Integer igra_id;

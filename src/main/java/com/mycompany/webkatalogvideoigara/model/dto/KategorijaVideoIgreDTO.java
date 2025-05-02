@@ -1,7 +1,6 @@
 package com.mycompany.webkatalogvideoigara.model.dto;
 
 
-
 import java.util.Set;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -17,8 +16,10 @@ public class KategorijaVideoIgreDTO {
     
 
     private Integer id;
+    
 
     private String naziv;
+    
 
     private Set<VideoIgraDTO> igre_u_kategoriji;
 

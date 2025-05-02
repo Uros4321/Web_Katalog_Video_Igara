@@ -1,9 +1,8 @@
 package com.mycompany.webkatalogvideoigara.model.dto;
 
-
-
 import java.time.Year;
 import java.util.Set;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -13,13 +12,13 @@ import java.util.Set;
  *
  * @author uros
  */
-
 public class VideoIgraDTO {
-    
 
     private Integer id;
 
-    private Set<KategorijaVideoIgreDTO> igre_u_kategoriji;
+    private Set<KategorijaVideoIgreDTO> kategorije_igre;
+
+    private Set<PlatformaDTO> platforme_igre;
 
     private String naziv;
 
@@ -37,12 +36,12 @@ public class VideoIgraDTO {
         this.id = id;
     }
 
-    public Set<KategorijaVideoIgreDTO> getIgre_u_kategoriji() {
-        return igre_u_kategoriji;
+    public Set<KategorijaVideoIgreDTO> getKategorije_igre() {
+        return kategorije_igre;
     }
 
-    public void setIgre_u_kategoriji(Set<KategorijaVideoIgreDTO> igre_u_kategoriji) {
-        this.igre_u_kategoriji = igre_u_kategoriji;
+    public void setKategorije_igre(Set<KategorijaVideoIgreDTO> igre_u_kategoriji) {
+        this.kategorije_igre = igre_u_kategoriji;
     }
 
     public String getNaziv() {
@@ -76,7 +75,5 @@ public class VideoIgraDTO {
     public void setGodina_izdanja(Year godina_izdanja) {
         this.godina_izdanja = godina_izdanja;
     }
-    
-    
-    
+
 }

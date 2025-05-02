@@ -3,10 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.webkatalogvideoigara.model.dto;
+
+
+import java.util.Set;
 /**
  *
  * @author uros
  */
+
 public class PlatformaDTO {
 
     private Integer id;
@@ -16,6 +20,9 @@ public class PlatformaDTO {
     private String tip_platforme;
 
     private String proizvodjac;
+    
+
+    private Set<VideoIgraDTO> igre_na_platformi;
 
     public Integer getId() {
         return id;
