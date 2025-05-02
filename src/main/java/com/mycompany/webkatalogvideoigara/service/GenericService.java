@@ -55,5 +55,9 @@ public abstract class GenericService<T, ID> {
     public Iterable<T> sortAndPaginate(int pageNum, int pageSize, String field, String direction) {
         return repository.findAll(PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.fromString(direction), field)));
     }
+//    
+//    public Iterable<T> filterAll(String[] fields, Object[] criteria){
+//        return repository.findAll(example)
+//    }
     
 }

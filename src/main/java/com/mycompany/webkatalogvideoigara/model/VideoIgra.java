@@ -100,6 +100,14 @@ public class VideoIgra {
     public void setGodina_izdanja(Year godina_izdanja) {
         this.godina_izdanja = godina_izdanja;
     }
+
+    public Set<Platforma> getPlatforme_igre() {
+        return platforme_igre;
+    }
+
+    public void setPlatforme_igre(Set<Platforma> platforme_igre) {
+        this.platforme_igre = platforme_igre;
+    }
     
     
     

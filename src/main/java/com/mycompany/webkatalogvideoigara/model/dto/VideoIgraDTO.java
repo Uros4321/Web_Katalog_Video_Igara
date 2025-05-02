@@ -76,4 +76,13 @@ public class VideoIgraDTO {
         this.godina_izdanja = godina_izdanja;
     }
 
+    public Set<PlatformaDTO> getPlatforme_igre() {
+        return platforme_igre;
+    }
+
+    public void setPlatforme_igre(Set<PlatformaDTO> platforme_igre) {
+        this.platforme_igre = platforme_igre;
+    }
+
+    
 }

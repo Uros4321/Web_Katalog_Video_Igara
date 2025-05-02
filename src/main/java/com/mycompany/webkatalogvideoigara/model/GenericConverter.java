@@ -20,6 +20,8 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 
 import com.mycompany.webkatalogvideoigara.model.dto.DTOObject;
+import java.util.HashSet;
+import java.util.Set;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
 //import root.security.SecurityConfiguration;
@@ -85,7 +87,15 @@ public class GenericConverter<T, DTO> {
 				copyList.add(listItemCopy);
 			}
 			return copyList;
-		} else {
+		} else if (object instanceof Set) {
+			Set<?> originalList = (Set<?>) object;
+			Set<Object> copyList = new HashSet<>();
+			for (Object listItem : originalList) {
+				Object listItemCopy = deepCopy(listItem);
+				copyList.add(listItemCopy);
+			}
+			return copyList;
+		}else {
 //			LOG.info("test 2.3");
 			Object copy = null;
 			try {
@@ -105,10 +115,55 @@ public class GenericConverter<T, DTO> {
 			return copy;
 		}
 	}
+        
+        private static Object deepUnravel(Object object) {
+		if (object instanceof List) {
+			Iterable originalList = (Iterable) object;
+			List<Object> copyList = new ArrayList<>();
+			for (Object listItem : originalList) {
+				Object listItemCopy = deepUnravel(listItem);
+				copyList.add(listItemCopy);
+			}
+			return copyList;
+		} else if (object instanceof Set) {
+			Iterable originalList = (Iterable) object;
+			Set<Object> copyList = new HashSet<>();
+			for (Object listItem : originalList) {
+				Object listItemCopy = deepUnravel(listItem);
+				copyList.add(listItemCopy);
+			}
+			return copyList;
+                }else {
+//                    System.out.println("EnteredPart2");
+//			LOG.info("test 2.3");
+			Object copy = null;
+			try {
+				// Uzimamo klasu objekta
+				Class<?> dtoClass = object.getClass();
+//                                System.out.println(dtoClass.toString());
+				// Uzimamo odgovarajući DTO
+				String objectClassName = dtoClass.getName().replace("model.dto.", "model.");
+                                int index = objectClassName.lastIndexOf("DTO");
+                                String objClassName = objectClassName.substring(0,index);
+//                                System.out.println("cname");
+//                                System.out.println(objClassName);
+//                                System.out.println("cname");
+				Class<?> objectClass = Class.forName(objClassName);
+				// Kreiramo novu instancu DTO klase
+				copy = objectClass.getDeclaredConstructor().newInstance();
+				BeanUtils.copyProperties(object, copy);
+			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException
+					| ClassNotFoundException e) {
+//                                    System.out.println("Error");
+				e.printStackTrace();
+			}
+			return copy;
+		}
+	}
 
 	private static boolean isComplexType(Class<?> type) {
 //		System.out.println(type);
-		return !type.getPackage().getName().startsWith("java") || List.class.isAssignableFrom(type);
+		return !type.getPackage().getName().startsWith("java") || Iterable.class.isAssignableFrom(type);
 	}
 
 	public T convertToEntity(DTO dto, Class<T> entityClass)
@@ -138,7 +193,7 @@ public class GenericConverter<T, DTO> {
 
 	public T convertToEntity2(Object dto, Class<T> entityClass) {
 		T entity = null;
-		System.out.println("DTO type: "+dto.getClass());
+//		System.out.println("DTO type: "+dto.getClass());
 //        try
 //        {
 //            System.out.println(type.getDeclaredConstructor().newInstance());
@@ -153,20 +208,20 @@ public class GenericConverter<T, DTO> {
 			BeanInfo beanInfo = Introspector.getBeanInfo(entityClass);
 			for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
 				String propertyName = pd.getName();
-				System.out.println(pd.getPropertyType());
+//				System.out.println(pd.getPropertyType());
 				if ("class".equals(propertyName)) {
 					continue;
 				}
 				Field dtoField = dto.getClass().getDeclaredField(propertyName);
 				dtoField.setAccessible(true);
 				if(DTOObject.class.isAssignableFrom(dtoField.getType())) {
-					System.out.println("check successful");
+//					System.out.println("check successful");
 				}
 				
 
 				
 				Object dtoValue = dtoField.get(dto);
-				System.out.println(dtoField.getType());
+//				System.out.println(dtoField.getType());
 				Field entityField = entity.getClass().getDeclaredField(propertyName);
 				entityField.setAccessible(true);
 				entityField.set(entity, dtoValue);
@@ -181,34 +236,43 @@ public class GenericConverter<T, DTO> {
 	public static <X> X staticConvertToEntity(Object o,Class<X> c) {
 		X entity = null;
 		try {
-			entity = c.getDeclaredConstructor().newInstance();
+                        entity = c.getDeclaredConstructor().newInstance();
 			BeanInfo beanInfo = Introspector.getBeanInfo(c);
 			for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
 				String propertyName = pd.getName();
-//				System.out.println(pd.getPropertyType());
+				Field dtoField = null;
 				if ("class".equals(propertyName)) {
 					continue;
 				}
-				Field dtoField = o.getClass().getDeclaredField(propertyName);
-				dtoField.setAccessible(true);
-				if(DTOObject.class.isAssignableFrom(dtoField.getType())) {
-//					System.out.println("check successful");
-					Object dtoValue = dtoField.get(o);
-					Object newValue = GenericConverter.staticConvertToEntity(dtoValue,pd.getPropertyType());
-					Field entityField = entity.getClass().getDeclaredField(propertyName);
-					entityField.setAccessible(true);
-					entityField.set(entity, newValue);
-					continue;
-				}
-				
+				// Trazim isto to polje u običnoj klasi
 
-				
+				try { // Pokusavam da nadjem polje
+					dtoField = o.getClass().getDeclaredField(propertyName);
+					dtoField.setAccessible(true);
+					// Ako ne nadjem trazim u nad klasi
+				} catch (NoSuchFieldException e) {
+					dtoField = o.getClass().getSuperclass().getDeclaredField(propertyName);
+				}
+				// Uzimam vrednost
 				Object dtoValue = dtoField.get(o);
-//				System.out.println(dtoField.getType());
-				Field entityField = entity.getClass().getDeclaredField(propertyName);
-				entityField.setAccessible(true);
-				entityField.set(entity, dtoValue);
+				// Ako nije iz paketa Java, računa se kao complex type i poziva se deepCopy
+				// ako jeste samo se upisuje vrednost
+//				System.out.println(entityField.getType()+"TEST");\
+//                                System.out.println(dtoField.getName());
+//                                System.out.println(dtoField.getType().toString());
+//                                System.out.println("complex");
+//                                System.out.println(GenericConverter.isComplexType(dtoField.getType()));
+//                                System.out.println("");
+				if (GenericConverter.isComplexType(dtoField.getType())) {
+					Object entityValue = deepUnravel(dtoValue);
+//                                        System.out.println(entityValue.getClass().toString());
+					pd.getWriteMethod().invoke(entity, entityValue);
+				} else {
+//					System.out.println("dto "+dto+" entityValue "+entityValue);
+					pd.getWriteMethod().invoke(entity, dtoValue);
+				}
 			}
+//			
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException
 				| IntrospectionException | NoSuchFieldException e) {
 			e.printStackTrace();
@@ -248,24 +312,14 @@ public class GenericConverter<T, DTO> {
 					pd.getWriteMethod().invoke(dto, entityValue);
 				}
 			}
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | NoSuchMethodException | SecurityException | IntrospectionException | NoSuchFieldException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NoSuchMethodException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IntrospectionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NoSuchFieldException e1) {
-			e1.printStackTrace();
 		}
+            // TODO Auto-generated catch block
+            // TODO Auto-generated catch block
+            // TODO Auto-generated catch block
+            // TODO Auto-generated catch block
 		
 		return dto;
 	}

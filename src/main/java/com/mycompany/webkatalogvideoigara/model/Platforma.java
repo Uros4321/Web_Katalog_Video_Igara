@@ -65,4 +65,14 @@ public class Platforma {
     public void setProizvodjac(String proizvodjac) {
         this.proizvodjac = proizvodjac;
     }
+
+    public Set<VideoIgra> getIgre_na_platformi() {
+        return igre_na_platformi;
+    }
+
+    public void setIgre_na_platformi(Set<VideoIgra> igre_na_platformi) {
+        this.igre_na_platformi = igre_na_platformi;
+    }
+    
+    
 }
