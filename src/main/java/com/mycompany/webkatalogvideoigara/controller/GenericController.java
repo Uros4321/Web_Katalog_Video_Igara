@@ -23,19 +23,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.mycompany.webkatalogvideoigara.model.GenericConverter;
 import com.mycompany.webkatalogvideoigara.service.GenericService;
 
-
-
-
-
-
-
 public abstract class GenericController<T, DTO, S extends GenericService<T, Integer>> {
 
     protected S service;
 
     public GenericController(S service) {
-		this.service=service;
-	}
+        this.service = service;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<DTO> findById(@PathVariable Integer id) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
@@ -57,9 +51,9 @@ public abstract class GenericController<T, DTO, S extends GenericService<T, Inte
 
     @GetMapping(path = "")
     public ResponseEntity<Iterable<DTO>> findAll() throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		@SuppressWarnings("unchecked")
-		Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
-	            .getGenericSuperclass()).getActualTypeArguments()[1];
+        @SuppressWarnings("unchecked")
+        Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[1];
 
         ArrayList<DTO> dtos = new ArrayList<>();
         Iterable<T> entiteti = service.findAll();
@@ -71,15 +65,15 @@ public abstract class GenericController<T, DTO, S extends GenericService<T, Inte
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
-    
+
     @GetMapping(path = "/sort/{field}/{direction}")
     public ResponseEntity<Iterable<DTO>> findAllSortedByField(@PathVariable String field, @PathVariable String direction) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		@SuppressWarnings("unchecked")
-		Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
-	            .getGenericSuperclass()).getActualTypeArguments()[1];
+        @SuppressWarnings("unchecked")
+        Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[1];
 
         ArrayList<DTO> dtos = new ArrayList<>();
-        Iterable<T> entiteti = service.sortBasedOnField(field,direction);
+        Iterable<T> entiteti = service.sortBasedOnField(field, direction);
 
         for (T entitet : entiteti) {
             GenericConverter<T, DTO> genConv = new GenericConverter<>();
@@ -89,32 +83,81 @@ public abstract class GenericController<T, DTO, S extends GenericService<T, Inte
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-	@PostMapping
-	public ResponseEntity<DTO> add(@RequestBody DTO dto) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-	    @SuppressWarnings("unchecked")   
-	    Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
-	            .getGenericSuperclass()).getActualTypeArguments()[0];
-	    GenericConverter<T, DTO> genConv = new GenericConverter<>();
-	    T entity = GenericConverter.staticConvertToEntity(dto, entityClass);
+    @GetMapping(path = "/page/{pageNum}/{pageSize}")
+    public ResponseEntity<Iterable<DTO>> findAllPaginated(@PathVariable String pageNum, @PathVariable String pageSize) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        @SuppressWarnings("unchecked")
+        Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[1];
+        int pgNumVal;
+        int pgSizeVal;
+        try {
+            pgNumVal = Integer.parseInt(pageNum);
+            pgSizeVal = Integer.parseInt(pageSize);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ArrayList<DTO> dtos = new ArrayList<>();
+        Iterable<T> entiteti = service.findAllWithPagination(pgNumVal, pgSizeVal);
+
+        for (T entitet : entiteti) {
+            GenericConverter<T, DTO> genConv = new GenericConverter<>();
+            DTO dto = genConv.convertToDTO(entitet, dtoClass);
+            dtos.add(dto);
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+    
+    @GetMapping(path = "/pagesort/{field}/{direction}/{pageNum}/{pageSize}")
+    public ResponseEntity<Iterable<DTO>> findAllPaginated(@PathVariable String field, @PathVariable String direction,@PathVariable String pageNum, @PathVariable String pageSize) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        @SuppressWarnings("unchecked")
+        Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[1];
+        int pgNumVal;
+        int pgSizeVal;
+        try {
+            pgNumVal = Integer.parseInt(pageNum);
+            pgSizeVal = Integer.parseInt(pageSize);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        ArrayList<DTO> dtos = new ArrayList<>();
+        Iterable<T> entiteti = service.sortAndPaginate(pgNumVal, pgSizeVal,field,direction);
+
+        for (T entitet : entiteti) {
+            GenericConverter<T, DTO> genConv = new GenericConverter<>();
+            DTO dto = genConv.convertToDTO(entitet, dtoClass);
+            dtos.add(dto);
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<DTO> add(@RequestBody DTO dto) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        @SuppressWarnings("unchecked")
+        Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0];
+        GenericConverter<T, DTO> genConv = new GenericConverter<>();
+        T entity = GenericConverter.staticConvertToEntity(dto, entityClass);
 //	    return new ResponseEntity(entity, HttpStatus.CREATED);
-	    T savedEntity = service.save(entity);
-	    @SuppressWarnings("unchecked")
-		DTO savedDto = genConv.convertToDTO(savedEntity, (Class<DTO>) dto.getClass());
-	    return new ResponseEntity<DTO>(savedDto, HttpStatus.CREATED);
-	}
+        T savedEntity = service.save(entity);
+        @SuppressWarnings("unchecked")
+        DTO savedDto = genConv.convertToDTO(savedEntity, (Class<DTO>) dto.getClass());
+        return new ResponseEntity<DTO>(savedDto, HttpStatus.CREATED);
+    }
 
-	@PutMapping("/{id}")
-	public ResponseEntity<DTO> update(@PathVariable("id") Long id, @RequestBody DTO dto) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-	    @SuppressWarnings("unchecked")
-	    Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
-	            .getGenericSuperclass()).getActualTypeArguments()[0];
-	    GenericConverter<T, DTO> genConv = new GenericConverter<>();
-	    T entityToUpdate = genConv.convertToEntity(dto, entityClass);
-	    T updatedEntity = service.save(entityToUpdate);
-	    @SuppressWarnings("unchecked")
-	    DTO updatedDto = genConv.convertToDTO(updatedEntity, (Class<DTO>) dto.getClass());
-	    return new ResponseEntity<>(updatedDto, HttpStatus.OK);
-	}
-
+    @PutMapping("/{id}")
+    public ResponseEntity<DTO> update(@PathVariable("id") Long id, @RequestBody DTO dto) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        @SuppressWarnings("unchecked")
+        Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0];
+        GenericConverter<T, DTO> genConv = new GenericConverter<>();
+        T entityToUpdate = genConv.convertToEntity(dto, entityClass);
+        T updatedEntity = service.save(entityToUpdate);
+        @SuppressWarnings("unchecked")
+        DTO updatedDto = genConv.convertToDTO(updatedEntity, (Class<DTO>) dto.getClass());
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
 
 }
