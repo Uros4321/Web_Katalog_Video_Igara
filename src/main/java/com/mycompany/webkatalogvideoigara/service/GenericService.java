@@ -9,15 +9,16 @@ package com.mycompany.webkatalogvideoigara.service;
  * @author uros
  */
 import java.util.Optional;
+import org.springframework.data.domain.Sort;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class GenericService<T, ID> {
 
-    protected CrudRepository<T, ID> repository;
+    protected JpaRepository<T, ID> repository;
 
-    public GenericService(CrudRepository<T, ID> repository) {
+    public GenericService(JpaRepository<T, ID> repository) {
         this.repository = repository;
     }
 
@@ -39,6 +40,10 @@ public abstract class GenericService<T, ID> {
 
     public void deleteById(ID id) {
         repository.deleteById(id);
+    }
+    
+    public Iterable<T> sortBasedOnField(String field,String directionString){
+        return repository.findAll(Sort.by(Sort.Direction.fromString(directionString),field));
     }
  
 }

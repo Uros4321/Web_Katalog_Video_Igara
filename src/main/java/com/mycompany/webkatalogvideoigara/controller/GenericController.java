@@ -71,6 +71,23 @@ public abstract class GenericController<T, DTO, S extends GenericService<T, Inte
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
+    
+    @GetMapping(path = "/sort/{field}/{direction}")
+    public ResponseEntity<Iterable<DTO>> findAllSortedByField(@PathVariable String field, @PathVariable String direction) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		@SuppressWarnings("unchecked")
+		Class<DTO> dtoClass = (Class<DTO>) ((ParameterizedType) getClass()
+	            .getGenericSuperclass()).getActualTypeArguments()[1];
+
+        ArrayList<DTO> dtos = new ArrayList<>();
+        Iterable<T> entiteti = service.sortBasedOnField(field,direction);
+
+        for (T entitet : entiteti) {
+            GenericConverter<T, DTO> genConv = new GenericConverter<>();
+            DTO dto = genConv.convertToDTO(entitet, dtoClass);
+            dtos.add(dto);
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
 
 	@PostMapping
 	public ResponseEntity<DTO> add(@RequestBody DTO dto) throws IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {

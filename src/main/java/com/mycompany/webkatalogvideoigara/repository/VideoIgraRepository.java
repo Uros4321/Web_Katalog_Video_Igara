@@ -1,8 +1,8 @@
 package com.mycompany.webkatalogvideoigara.repository;
 
-import org.springframework.data.repository.CrudRepository;
 import com.mycompany.webkatalogvideoigara.model.VideoIgra;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VideoIgraRepository extends CrudRepository<VideoIgra, Integer> {
+public interface VideoIgraRepository extends JpaRepository<VideoIgra, Integer> {
 
 }
