@@ -1,3 +1,6 @@
+import KatalogFilter from "./KatalogFilter"
+import KatalogSorter from "./KatalogSorter"
+
 function KatalogIgara(){
     var listaIgara = ["g1","g2","g3","g4","g5","g6","g7"]
     var standardBlockSize = 5
@@ -112,8 +115,8 @@ function KatalogIgara(){
     return (
         <div className="flex flex-col w-2/3 bg-gray-700">
             <div className="flex flex-row h-1/6 w-full bg-blue-950/25">
-             <div className="w-1/4 border border-4 border-dotted border-red-500">Sorting and compression</div>
-             <div className="w-3/4 border border-4 border-dotted border-red-500">Filter by name/ include or exclude category</div>
+             <div className="w-1/4 border border-4 border-dotted border-red-500"><KatalogSorter/></div>
+             <div className="w-3/4 border border-4 border-dotted border-red-500"><KatalogFilter/></div>
             </div>
             <ul className="h-full">
 
