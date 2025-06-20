@@ -12,9 +12,12 @@ import com.mycompany.webkatalogvideoigara.service.VideoIgraService;
 import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+@CrossOrigin(origins = {"http://localhost:3000","http://127.0.0.1:3000"}, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 @Controller
 @RequestMapping("/api/igre")
 public class VideoIgraController extends GenericController<VideoIgra, VideoIgraDTO, VideoIgraService> {
