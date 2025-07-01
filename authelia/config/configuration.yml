@@ -1,0 +1,108 @@
+---
+###############################################################################
+#                           Authelia Configuration                            #
+###############################################################################
+
+theme: dark
+identity_validation:
+  reset_password:
+    jwt_secret: "6acf6ad5a2d5dc9b5154e77af0bdf8a1"
+
+server:
+  address: 'tcp://0.0.0.0:9091/'
+  buffers:
+    read: 4096
+    write: 4096
+  endpoints:
+    enable_pprof: false
+    enable_expvars: false
+  disable_healthcheck: false
+  tls:
+    key: ""
+    certificate: ""
+
+log:
+  level: info
+
+totp:
+  issuer: 192.168.88.150
+  period: 30
+  skew: 1
+
+authentication_backend:
+  password_reset:
+    disable: false
+  refresh_interval: 5m
+  file:
+    path: /config/users_database.yml
+    password:
+      algorithm: argon2id
+      iterations: 1
+      key_length: 32
+      salt_length: 16
+      memory: 1024
+      parallelism: 8
+
+access_control:
+  default_policy: deny
+  rules:
+    ## bypass rule
+    - domain: 
+        - "auth.domain.com"
+      policy: bypass
+    ## catch-all
+    - domain:
+        - "*.domain.com"
+      subject: 
+        - "group:admins"
+      policy: one_factor
+
+session:
+  name: authelia_session
+  same_site: lax
+  secret: "d8145f79cf70f9421167aab18d741e4b"
+  expiration: 1h
+  inactivity: 5m
+  remember_me_duration: 2M
+  cookies:
+    - domain: 192.168.88.150
+      authelia_url: https://192.168.88.150:5000
+      default_redirection_url: https://192.168.88.150:3000/home
+  redis:
+    host: redis
+    port: 6379
+    password: "anpcios465dhE2436KWLFM1324"
+    database_index: 0
+    maximum_active_connections: 10
+    minimum_idle_connections: 0
+
+regulation:
+  max_retries: 3
+  find_time: 10m
+  ban_time: 12h
+
+storage:
+  encryption_key: "YOUR_STORAGE_ENCRYPTION_KEY"
+  mysql:
+    address: 'tcp://mariadb:3306/'
+    database: authelia
+    username: authelia
+    password: "i8zcxmIO839EnaPEIJ743"
+  
+notifier:
+  disable_startup_check: false
+  smtp:
+    username: devfilko@gmail.com
+    password: "abcmauqoyzkvmxsf"
+    host: smtp.gmail.com
+    port: 587
+    sender: devfilko@gmail.com
+    identifier: webkatalog_auth
+    subject: "[Authelia] {Notification}"
+    startup_check_address: test@authelia.com
+    disable_require_tls: false
+    disable_html_emails: false
+    tls:
+      skip_verify: false
+      minimum_version: TLS1.2
+...

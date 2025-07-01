@@ -1,0 +1,53 @@
+version: '3'
+services:
+  auth:
+    container_name: auth  
+    image: authelia/authelia:latest
+    expose:
+      - 9091
+    volumes:
+      - /home/uros/Documents/container_volumes/authelia/config:/config
+    labels:
+      traefik.enable: true
+      traefik.http.routers.authelia.entryPoints: https
+    networks:
+      - proxy
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+
+  redis:
+    container_name: redis
+    image: bitnami/redis:latest
+    expose:
+      - 6379
+    volumes:
+      - /home/uros/Documents/container_volumes/redis/bitnami:/bitnami
+    environment:
+      REDIS_PASSWORD: "anpcios465dhE2436KWLFM1324"
+    networks:
+      - proxy
+    restart: unless-stopped
+
+  mariadb:
+    container_name: mariadb
+    image: linuxserver/mariadb:latest
+    expose:
+      - 3306
+    volumes:
+      - /home/uros/Documents/container_volumes/mariadb:/config
+    environment:
+      MYSQL_ROOT_PASSWORD: "hOkaYfP9321Ke8K1lkS8103"
+      MYSQL_ROOT_USER: root
+      MYSQL_DATABASE: authelia
+      MYSQL_USER: authelia
+      MYSQL_PASSWORD: "i8zcxmIO839EnaPEIJ743"  
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
