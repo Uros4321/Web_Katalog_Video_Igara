@@ -46,7 +46,19 @@ services:
     networks:
       - proxy
     restart: unless-stopped
-
+    
+  nginx:
+    image: 'library/nginx:latest'
+#    restart: unless-stopped
+    ports:
+      - '8001:80'
+      - '8100:81'
+      - '4430:443'
+    volumes:
+      - /home/uros/Documents/container_volumes/nginx/data:/data
+      - /home/uros/Documents/container_volumes/nginx/etc/nginx:/etc/nginx
+    networks:
+      - proxy
 networks:
   proxy:
     driver: bridge
