@@ -35,24 +35,24 @@ public class RepoGenerator {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		List<String> repozitorijumi = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String className = "";
-		while (true) {
-			System.out.print("Enter repo name: ");
-			className = reader.readLine();
-			if (className.equals("make")) {
-				break;
-			}
-			if (className.equals("")) {
-				System.out.println("Enter repo name!!");
-			} else {
-				repozitorijumi.add(className);
-			}
-		}
-		for (String r : repozitorijumi) {
-			generateRepositoryFile(r);
-		}
-	}
+//	public static void main(String[] args) throws IOException {
+//		List<String> repozitorijumi = new ArrayList<>();
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		String className = "";
+//		while (true) {
+//			System.out.print("Enter repo name: ");
+//			className = reader.readLine();
+//			if (className.equals("make")) {
+//				break;
+//			}
+//			if (className.equals("")) {
+//				System.out.println("Enter repo name!!");
+//			} else {
+//				repozitorijumi.add(className);
+//			}
+//		}
+//		for (String r : repozitorijumi) {
+//			generateRepositoryFile(r);
+//		}
+//	}
 }

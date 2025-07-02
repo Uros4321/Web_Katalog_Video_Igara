@@ -139,6 +139,9 @@ public abstract class GenericController<T, DTO, S extends GenericService<T, Inte
         Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
         GenericConverter<T, DTO> genConv = new GenericConverter<>();
+//        System.out.println("Entity Class");
+//        System.out.println(entityClass);
+//        System.out.println("++++++++");
         
         
 //        System.out.println(entityClass.toString());

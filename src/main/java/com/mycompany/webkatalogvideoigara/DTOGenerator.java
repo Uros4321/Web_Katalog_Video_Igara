@@ -43,37 +43,37 @@ public class DTOGenerator {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		List<String> klase = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String className = "";
-		ArrayList<String> class2 = new ArrayList<>();
-		
-		while (true) {
-			System.out.print("Enter class2 name: ");
-			String class2Name = reader.readLine();
-			if (class2Name.equals("next")) {
-				break;
-			} else {
-				class2.add(class2Name);
-			}
-		}
-		
-		while (true) {
-			System.out.print("Enter class name: ");
-			className = reader.readLine();
-			if (className.equals("make")) {
-				break;
-			}
-			if (className.equals("")) {
-				System.out.println("Enter class name!!");
-			} else {
-				klase.add(className);
-			}
-		}
-		for (String r : klase) {
-			generateFile(r,class2);
-		}
-	
-	}
+//	public static void main(String[] args) throws IOException {
+//		List<String> klase = new ArrayList<>();
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		String className = "";
+//		ArrayList<String> class2 = new ArrayList<>();
+//		
+//		while (true) {
+//			System.out.print("Enter class2 name: ");
+//			String class2Name = reader.readLine();
+//			if (class2Name.equals("next")) {
+//				break;
+//			} else {
+//				class2.add(class2Name);
+//			}
+//		}
+//		
+//		while (true) {
+//			System.out.print("Enter class name: ");
+//			className = reader.readLine();
+//			if (className.equals("make")) {
+//				break;
+//			}
+//			if (className.equals("")) {
+//				System.out.println("Enter class name!!");
+//			} else {
+//				klase.add(className);
+//			}
+//		}
+//		for (String r : klase) {
+//			generateFile(r,class2);
+//		}
+//	
+//	}
 }

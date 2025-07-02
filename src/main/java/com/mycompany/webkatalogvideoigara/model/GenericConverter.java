@@ -136,6 +136,12 @@ public class GenericConverter<T, DTO> {
                 }else {
 //                    System.out.println("EnteredPart2");
 //			LOG.info("test 2.3");
+//                        System.out.println("Object");
+//                        System.out.println(object);
+//                        System.out.println("++++++");
+                        if(object==null){
+                            return null;
+                        }
 			Object copy = null;
 			try {
 				// Uzimamo klasu objekta
@@ -237,6 +243,9 @@ public class GenericConverter<T, DTO> {
 		X entity = null;
 		try {
                         entity = c.getDeclaredConstructor().newInstance();
+//                        System.out.println("Entity");
+//                        System.out.println(entity);
+//                        System.out.println("++++++");
 			BeanInfo beanInfo = Introspector.getBeanInfo(c);
 			for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
 				String propertyName = pd.getName();

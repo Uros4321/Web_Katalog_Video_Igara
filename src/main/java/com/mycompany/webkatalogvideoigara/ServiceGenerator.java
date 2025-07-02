@@ -56,35 +56,35 @@ public class ServiceGenerator {
 		return fileNames;
 	}
 
-	public static void main(String[] args) throws IOException {
-		List<String> servisi = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String className = "";
-		System.out.println("1. Make services for all classes \n2. Make services by name");
-		className = reader.readLine();
-		String filePath = "src/main/java/com/mycompany/webkatalogvideoigara/model";
-		if (className.equals("2")) {
-			while (true) {
-				System.out.print("Enter service name: ");
-				className = reader.readLine();
-
-				if (className.equals("make")) {
-					break;
-				}
-				if (className.equals("")) {
-					System.out.println("Enter service name!!");
-				} else {
-					servisi.add(className);
-				}
-			}
-		} else if (className.equals("1")) {
-
-			servisi = listFileNamesWithoutExtension(filePath);
-			System.out.println(servisi);
-		}
-		for (String r : servisi) {
-//			System.out.println(r);
-			generateRepositoryFile(r);
-		}
-	}
+//	public static void main(String[] args) throws IOException {
+//		List<String> servisi = new ArrayList<>();
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		String className = "";
+//		System.out.println("1. Make services for all classes \n2. Make services by name");
+//		className = reader.readLine();
+//		String filePath = "src/main/java/com/mycompany/webkatalogvideoigara/model";
+//		if (className.equals("2")) {
+//			while (true) {
+//				System.out.print("Enter service name: ");
+//				className = reader.readLine();
+//
+//				if (className.equals("make")) {
+//					break;
+//				}
+//				if (className.equals("")) {
+//					System.out.println("Enter service name!!");
+//				} else {
+//					servisi.add(className);
+//				}
+//			}
+//		} else if (className.equals("1")) {
+//
+//			servisi = listFileNamesWithoutExtension(filePath);
+//			System.out.println(servisi);
+//		}
+//		for (String r : servisi) {
+////			System.out.println(r);
+//			generateRepositoryFile(r);
+//		}
+//	}
 }

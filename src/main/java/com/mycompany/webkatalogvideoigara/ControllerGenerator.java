@@ -40,28 +40,28 @@ public class ControllerGenerator {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		Map<String, String> mapa = new HashMap<>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String className = "";
-		String apiName = "";
-		while (true) {
-			System.out.print("Enter controller name: ");
-			className = reader.readLine();
-			if (className.equals("make")) {
-				break;
-			}
-			if (className.equals("")) {
-				System.out.println("Enter class name!!");
-			} else {
-				System.out.print("Enter api name: ");
-				apiName = reader.readLine();
-				mapa.put(className, apiName);
-			}
-		}
-
-		for (Map.Entry<String, String> entry : mapa.entrySet()) {
-			generateFile(entry.getKey(), entry.getValue());
-		}
-	}
+//	public static void main(String[] args) throws IOException {
+//		Map<String, String> mapa = new HashMap<>();
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		String className = "";
+//		String apiName = "";
+//		while (true) {
+//			System.out.print("Enter controller name: ");
+//			className = reader.readLine();
+//			if (className.equals("make")) {
+//				break;
+//			}
+//			if (className.equals("")) {
+//				System.out.println("Enter class name!!");
+//			} else {
+//				System.out.print("Enter api name: ");
+//				apiName = reader.readLine();
+//				mapa.put(className, apiName);
+//			}
+//		}
+//
+//		for (Map.Entry<String, String> entry : mapa.entrySet()) {
+//			generateFile(entry.getKey(), entry.getValue());
+//		}
+//	}
 }
