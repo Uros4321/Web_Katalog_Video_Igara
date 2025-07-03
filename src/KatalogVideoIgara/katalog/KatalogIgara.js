@@ -6,16 +6,16 @@ import React, { useState, useEffect } from 'react';
 
 function KatalogIgara() {
     const [data, setData] = useState(null);
+    const [displayList, setList] = useState([])
+    const [paginationList, setPage] = useState([])
+    const [init, initialize] = useState(false)
     const navigate = useNavigate();
 
     var adresa = "https://127.0.0.1:4430/api/igre"
-    var adresa_cat = "https://127.0.0.1:4430/api/kategorije"
 
     var listaIgara = []
     var standardBlockSize = 5
     var compactBlockSize = 20
-    var displayList = []
-    var paginationList = []
 
     var blockSize = compactBlockSize
 
@@ -33,19 +33,44 @@ function KatalogIgara() {
     }, []);
 
 
+    const filterCallback = (filter_params) => {
+        console.log("started_callback")
+        console.log(filter_params)
+        var filtered = data.filter((igra) => {
+            let game_cats = igra.kategorije_igre.map(kategorija => kategorija.id);
+            console.log(game_cats)
+            let include_fulfilled = filter_params["included"].every((id) => {
+                return game_cats.includes(Number(id))
+            })
+            let exclude_fulfilled = filter_params["excluded"].every((id) => {
+                return !game_cats.includes(Number(id))
+            })
+            let name_fulfilled = igra.naziv.toLowerCase().indexOf(filter_params["name"].toLowerCase())>-1
+            console.log(name_fulfilled)
+
+            return include_fulfilled&&exclude_fulfilled&&name_fulfilled
+        })
+        console.log("filtered")
+        console.log(filtered)
+        genList(filtered,blockSize,1)
+        genPagination(filtered,blockSize,1)
+    }
     const genList = (list, blockSize, blockNum) => {
         let p1 = blockSize.toString()
         var prop = "h-1/".concat(p1).concat(" flex flex-row bg-blue border border-4 border-dotted border-blue-500")
-        console.log(prop)
+        var temp_displayList = []
         let finalNum = blockSize * (blockNum)
         if (finalNum > list.length) {
             finalNum = list.length
         }
         for (let i = blockSize * (blockNum - 1); i < finalNum; i++) {
-            displayList.push(
-                <li className={prop} onClick={() => navigate("/game/"+list[i].id)}><div>{list[i].naziv}</div></li>
+            temp_displayList.push(
+                <li key={list[i].id} className={prop} onClick={() => navigate("/game/" + list[i].id)}><div>{list[i].naziv}</div></li>
             )
         }
+        console.log("temp_displayList")
+        console.log(temp_displayList)
+        setList(temp_displayList)
     }
     const genPagination = (list, blockSize, blockNum) => {
         let whole = Math.floor(list.length / blockSize)
@@ -56,54 +81,54 @@ function KatalogIgara() {
         if (remain > 0) {
             pagenum += 1
         }
-        paginationList = []
+        var temp_paginationList = []
         if (blockNum === 1) {
-            paginationList.push(
-                <div className={classStr}> {"<<"} </div>
+            temp_paginationList.push(
+                <div key={"start"} className={classStr}> {"<<"} </div>
 
             )
-            paginationList.push(
-                <div className={classStr}> {"<"} </div>
+            temp_paginationList.push(
+                <div key={"back"} className={classStr}> {"<"} </div>
 
             )
 
         } else {
-            paginationList.push(
-                <button className={classStr}> {"<<"} </button>
+            temp_paginationList.push(
+                <button key={"start_button"} className={classStr}> {"<<"} </button>
 
             )
-            paginationList.push(
-                <button className={classStr}> {"<"} </button>
+            temp_paginationList.push(
+                <button key={"back_button"} className={classStr}> {"<"} </button>
 
             )
         }
         for (let i = 0; i < pagenum; i++) {
             if (i === blockNum - 5 - 1) {
-                paginationList.push(
-                    <button className={classStr}>{i + 1}</button>
+                temp_paginationList.push(
+                    <button key={"page_"+(i+1)} className={classStr}>{i + 1}</button>
                 )
-                paginationList.push(
-                    <div className={classStr}> ... </div>
+                temp_paginationList.push(
+                    <div key={"filler1"} className={classStr}> ... </div>
 
                 )
             }
             if (i === blockNum - 2 - 1 || i === blockNum - 1 - 1 || i === blockNum + 1 - 1 || i === blockNum + 2 - 1) {
-                paginationList.push(
-                    <button className={classStr}>{i + 1}</button>
+                temp_paginationList.push(
+                    <button key={"page_"+(i+1)} className={classStr}>{i + 1}</button>
                 )
             }
             if (i === blockNum - 1) {
-                paginationList.push(
-                    <div className={classStr}>{i + 1}</div>
+                temp_paginationList.push(
+                    <div key={"page_"+(i+1)} className={classStr}>{i + 1}</div>
                 )
             }
             if (i === blockNum + 5 - 1) {
-                paginationList.push(
-                    <div className={classStr}> ... </div>
+                temp_paginationList.push(
+                    <div key={"filler2"} className={classStr}> ... </div>
 
                 )
-                paginationList.push(
-                    <button className={classStr}>{i + 1}</button>
+                temp_paginationList.push(
+                    <button key={"page_"+(i+1)} className={classStr}>{i + 1}</button>
                 )
 
             }
@@ -112,44 +137,48 @@ function KatalogIgara() {
 
         }
         if (blockNum === pagenum) {
-            paginationList.push(
-                <div className={classStr}> {">"} </div>
+            temp_paginationList.push(
+                <div key={"next"} className={classStr}> {">"} </div>
 
             )
-            paginationList.push(
-                <div className={classStr}> {">>"} </div>
+            temp_paginationList.push(
+                <div key={"end"} className={classStr}> {">>"} </div>
 
             )
 
         } else {
-            paginationList.push(
-                <button className={classStr}> {">"} </button>
+            temp_paginationList.push(
+                <button key={"next_button"} className={classStr}> {">"} </button>
 
             )
-            paginationList.push(
-                <button className={classStr}> {">>"} </button>
+            temp_paginationList.push(
+                <button key={"end_button"} className={classStr}> {">>"} </button>
 
             )
         }
+        setPage(temp_paginationList)
+    }
+    const pageInit = ()=>{
+        if(!init){
+            console.log("inside block")
+            genList(data, blockSize, 1)
+            genPagination(data, blockSize, 1)
+        }
+        initialize(true)
     }
     if (!data) {
         return <p>Loading data...</p>;
     } else {
-        genList(data, blockSize, 1)
-        genPagination(data, blockSize, 1)
+        if(!init){
+            pageInit()
+        }
         return (
             <div className="flex flex-col w-2/3 bg-gray-700">
                 <div className="flex flex-row h-1/6 w-full bg-blue-950/25">
                     <div className="w-1/4 border border-4 border-dotted border-red-500"><KatalogSorter /></div>
-                    <div className="w-3/4 border border-4 border-dotted border-red-500"><KatalogFilter /></div>
+                    <div className="w-3/4 border border-4 border-dotted border-red-500"><KatalogFilter filterCallback={filterCallback}/></div>
                 </div>
                 <ul className="h-full">
-
-                    {/* <li className="h-1/5 flex flex-row"><div className="w-1/5 bg-blue-600">game1 image</div><div> game1 description</div></li>
-                <li className="h-1/5 flex flex-row"><div className="w-1/5 bg-blue-600">game2 image</div><div> game2 description</div></li>
-                <li className="h-1/5 flex flex-row"><div className="w-1/5 bg-blue-600">game3 image</div><div> game3 description</div></li>
-                <li className="h-1/5 flex flex-row"><div className="w-1/5 bg-blue-600">game4 image</div><div> game4 description</div></li>
-                <li className="h-1/5 flex flex-row"><div className="w-1/5 bg-blue-600">game5 image</div><div> game5 description</div></li> */}
                     {displayList}
                 </ul>
                 <div className="h-1/6 w-full flex flex-row justify-stretch bg-blue-950/25">
